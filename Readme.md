@@ -1,8 +1,6 @@
 # Autonomous Mobile Robot – Grand Challenge
 
 > **Course:** ENPM701 — Autonomous Robotics  
-> **Team:** Autonomous Robotics (University Project)  
-> **Demo Video:** [Watch here](#)  
 > **Environment:** 10×10 ft arena; construction zone (2×2 ft, bottom-right), drop zone (4×4 ft, bottom-left)
 
 The goal is to design and program an autonomous ground robot to explore a Martian-style arena, detect color-coded blocks in a required order (**red → green → blue** × 3), pick them with a gripper, and deliver them to the drop zone—fully autonomously.
@@ -13,8 +11,6 @@ The goal is to design and program an autonomous ground robot to explore a Martia
 - [Hardware Architecture](#hardware-architecture)
 - [Software Architecture](#software-architecture)
 - [Vision Modules](#vision-modules)
-  - [Stop Sign Detection](#stop-sign-detection)
-  - [Arrow Detection](#arrow-detection)
   - [Block Detection & Masking](#block-detection--masking)
 - [Control & Navigation](#control--navigation)
   - [Motion Control](#motion-control)
@@ -23,13 +19,6 @@ The goal is to design and program an autonomous ground robot to explore a Martia
 - [Calibration](#calibration)
 - [Grand Challenge Performance](#grand-challenge-performance)
 - [Key Takeaways](#key-takeaways)
-- [Quick Start](#quick-start)
-- [Repository Structure](#repository-structure)
-- [Tuning Parameters](#tuning-parameters)
-- [Known Issues & Future Work](#known-issues--future-work)
-- [Acknowledgments](#acknowledgments)
-- [License](#license)
-
 ---
 
 ## Hardware Architecture
@@ -41,12 +30,12 @@ The goal is to design and program an autonomous ground robot to explore a Martia
 - **Gripper:** Servo-actuated claw for pickup/placement
 
 **Compute & Sensors**
-- **Processor:** Raspberry Pi 3B+ (video processing, autonomy) *(video mentions Pi 4; project uses 3B+ in final build—either is compatible)*  
+- **Processor:** Raspberry Pi 3B+ (video processing, autonomy)   
 - **Camera:** Raspberry Pi camera (primary perception)  
 - **Ultrasonic Sensor:** Proximity sensing & wall avoidance; used for mid-run re-localization  
 - **IMU:** Orientation (roll/pitch/yaw) for heading correction & dead-reckoning
 
-> Optional mechanical hack: a **thin cardboard lip** on the gripper improved capture reliability when grasp alignment was slightly off.
+> Mechanical hack: a **thin cardboard lip** on the gripper improved capture reliability when grasp alignment was slightly off.
 
 ---
 
@@ -64,15 +53,6 @@ Development followed an incremental, test-driven approach. Each week focused on 
 ---
 
 ## Vision Modules
-
-### Stop Sign Detection
-- HSV segmentation tuned to robustly isolate the sign color range across lighting changes.
-- Binary masks → contour filtering → presence/stop decision.
-
-### Arrow Detection
-- Contour extraction + polygon approximation to classify arrow shapes.
-- Direction inference (left/right) feeds the path planner for turning.
-
 ### Block Detection & Masking
 - Color-specific HSV masks for **red, green, blue**.
 - Largest valid contour → bounding shape (min-enclosing circle or bounding box).
@@ -123,14 +103,6 @@ Development followed an incremental, test-driven approach. Each week focused on 
 
 **Final Trial Highlights**
 - Planned trajectory executed reliably with fused control.  
-- Issues encountered:
-  - Occasional **false positive** on second red block under changing light.
-  - **Premature stop** triggered before reaching the goal zone (extra condition needed).
-  - **Missing error handler** for ultrasonic read failures (rare but impactful).
-
-**Post-mortem**
-- A small software guard (debounce + state check around the stop condition) would have enabled a clean, full-score run.
-
 ---
 
 ## Key Takeaways
@@ -138,29 +110,5 @@ Development followed an incremental, test-driven approach. Each week focused on 
 - **Perception:** Real-time color segmentation + shape cues are viable on Pi-class hardware with careful thresholding.  
 - **Localization:** Lightweight fusion (encoders+IMU+ultrasonic) is enough for small arenas when drift is periodically capped.  
 - **Control:** Simple P/PID can produce smooth, accurate motion if sensors are calibrated and noise-bounded.  
-- **Integration:** Most failures were **edge-case handling** (sensor glitches, early stop)—robust guards matter as much as core algorithms.
 
 ---
-
-## Quick Start
-
-> **Prereqs:** Raspberry Pi OS, Python 3.9+, OpenCV, NumPy, IMU & ultrasonic libs, GPIO access.
-
-```bash
-# 1) Install deps (example)
-sudo apt-get update
-sudo apt-get install -y python3-opencv python3-numpy python3-smbus i2c-tools
-pip3 install RPi.GPIO
-
-# 2) Enable camera, I2C, and serial as needed
-sudo raspi-config   # Interfaces → enable Camera / I2C / Serial
-
-# 3) Clone repo
-git clone <your-repo-url>.git
-cd <your-repo>
-
-# 4) Run vision debug (shows masks & centroids)
-python3 tools/vision_debug.py --camera 0
-
-# 5) Run full autonomy
-python3 run_autonomy.py --order R,G,B --trials 3
