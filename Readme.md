@@ -5,6 +5,8 @@
 
 The goal is to design and program an autonomous ground robot to explore a Martian-style arena, detect color-coded blocks in a required order (**red → green → blue** × 3), pick them with a gripper, and deliver them to the drop zone—fully autonomously.
 
+![Environment map](./images/plot2.png)
+
 ---
 
 ## Table of Contents
@@ -36,6 +38,8 @@ The goal is to design and program an autonomous ground robot to explore a Martia
 - **IMU:** Orientation (roll/pitch/yaw) for heading correction & dead-reckoning
 
 > Mechanical hack: a **thin cardboard lip** on the gripper improved capture reliability when grasp alignment was slightly off.
+
+![Hardware](./images/plot3.png)
 
 ---
 
@@ -103,6 +107,7 @@ Development followed an incremental, test-driven approach. Each week focused on 
 
 **Final Trial Highlights**
 - Planned trajectory executed reliably with fused control.  
+![Trajectory](./images/plot1.png)
 ---
 
 ## Key Takeaways
