@@ -116,4 +116,6 @@ Development followed an incremental, test-driven approach. Each week focused on 
 - **Localization:** Lightweight fusion (encoders+IMU+ultrasonic) is enough for small arenas when drift is periodically capped.  
 - **Control:** Simple P/PID can produce smooth, accurate motion if sensors are calibrated and noise-bounded.  
 
+## Video Link
+[YouTube](https://youtu.be/2GteA0UrizY)
 ---
